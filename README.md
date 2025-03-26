@@ -56,3 +56,8 @@ Here's a feature demonstration video of genfly.dev:
    ```   
 
 
+## Community & contact
+- [GitHub Issues](https://github.com/sparrow-js/an-codeAI/issues)：The bug must be mentioned in the issues.
+- Wechat：sparrow777-js，Open for collaboration and exchange.
+- email： genflyai@gmail.com
+
