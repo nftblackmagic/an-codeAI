@@ -17,7 +17,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
     <SessionProvider basePath={"/api/auth"} session={session}>
       <div className="flex flex-col h-full w-full">
       <Header />
-      <Background />
+      {/* <Background /> */}
         {children}
       </div>
       <ToastContainer />

@@ -55,6 +55,7 @@ export async function POST(request: Request) {
             result: 'Update completed',
           });
         } catch (error) {
+          console.log('error **********', error);
           await noticeHost({
             event: 'error',
             error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
       },
     });
 

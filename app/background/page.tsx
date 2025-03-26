@@ -10,7 +10,7 @@ export default function Background() {
   
   return (
     <div className="w-full h-full">
-      {theme === 'dark' ? <BackgroundMeteor /> : <NatureScene />}
+      {/* {theme === 'dark' ? <BackgroundMeteor /> : <NatureScene />} */}
     </div>
   );
 } 

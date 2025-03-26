@@ -258,7 +258,7 @@ export const updateFileList = async (
     }
     
     // 创建基于文件大小的批次
-    const MAX_BATCH_SIZE_KB = 20; // 最大批次大小，单位KB
+    const MAX_BATCH_SIZE_KB = 15; // 最大批次大小，单位KB
     const MAX_BATCH_SIZE = MAX_BATCH_SIZE_KB * 1024; // 转换为字节
     
     // 根据文件大小分组
@@ -414,10 +414,11 @@ export const updateFileList = async (
                 console.log(`Processing ********** time: ${new Date().toISOString()}`);
                 const result = await processBatch(batches[i]);
                 batchResults.push(result);
+                console.log('batchResults **********', result, batches[i].map((file: any) => file.path));
                 
                 // 在批次之间添加延迟，避免API限制
                 if (i < batches.length - 1) {
-                    console.log(`Adding delay between batches (2 second)`);
+                    console.log("Adding delay between batches (2 second)");
                     await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             } catch (error) {
@@ -499,6 +500,7 @@ const ensureMachineReady = async (appName: string) => {
       }
         
       default:
+        console.log(`Unexpected machine state: ${machine.state}`);
         throw new Error(`Unexpected machine state: ${machine.state}`);
     }
   }
@@ -676,7 +678,7 @@ export const reinstallDependencies = async (appId: string, installDependencies: 
       const cdResult = await executeCommand(appId, machine.id, ['sh', '-c', 'cd /app']);
       console.log('Changed to app directory:', cdResult);
       let installCommand = 'npm install';
-      if (!hasPackageJson && installDependencies) {
+      if (!hasPackageJson && installDependencies && installDependencies !== 'npm install') {
         installCommand = installDependencies;
       }
 

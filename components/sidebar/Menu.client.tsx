@@ -57,14 +57,14 @@ function CurrentDateTime() {
       <div className="h-4 w-4 i-lucide:clock opacity-80" />
       <div className="flex gap-2">
         <span>{dateTime.toLocaleDateString()}</span>
-        <span>{dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        {/* <span>{dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span> */}
       </div>
     </div>
   );
 }
 
 export const Menu = () => {
-  const { duplicateCurrentChat, exportChat } = useChatHistory();
+  // const { duplicateCurrentChat, exportChat } = useChatHistory();
   const menuRef = useRef<HTMLDivElement>(null);
   const [list, setList] = useState<ChatHistoryItem[]>([]);
   const [open, setOpen] = useState(false);
@@ -192,7 +192,7 @@ export const Menu = () => {
 
   const handleExport = async (id: string) => {
     try {
-      const response = await fetch(`/api/chats/${id}/export`);
+      const response = await fetch(`/api/chats/export/${id}`);
       if (!response.ok) throw new Error('Failed to export chat');
       
       const chatData = await response.json();

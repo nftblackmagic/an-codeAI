@@ -119,7 +119,7 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(
                           />
                         </WithTooltip>
                       )}
-
+{/* 
                       <WithTooltip tooltip="Fork chat from this message">
                         <button
                           onClick={() => handleFork(messageId)}
@@ -129,7 +129,7 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(
                             'text-xl text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary transition-colors',
                           )}
                         />
-                      </WithTooltip>
+                      </WithTooltip> */}
                     </div>
                   )}
                 </div>

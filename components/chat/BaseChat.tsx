@@ -123,6 +123,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
     const [progressAnnotations, setProgressAnnotations] = useState<ProgressAnnotation[]>([]);
     const { data: session } = useSession();
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     useEffect(() => {
       if (data) {
         const progressList = data.filter(
@@ -237,7 +238,6 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
     const handleSendMessage = (event: React.UIEvent, messageInput?: string) => {
       if (sendMessage) {
         sendMessage(event, messageInput);
-
         if (recognition) {
           recognition.abort(); // Stop current recognition
           setTranscript(''); // Clear transcript
@@ -499,30 +499,38 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
 
                           event.preventDefault();
 
-                          if(!session) {
-                            setShowLoginModal(true);
-                            return;
-                          }
+                          // Prevent multiple rapid Enter presses
+                          if (isButtonDisabled) return;
+                          setIsButtonDisabled(true);
 
-                          if (isStreaming) {
-                            handleStop?.();
-                            return;
-                          }
+                          try {
+                            if(!session) {
+                              setShowLoginModal(true);
+                              return;
+                            }
 
-                          // ignore if using input method engine
-                          if (event.nativeEvent.isComposing) {
-                            return;
-                          }
+                            if (isStreaming) {
+                              handleStop?.();
+                              return;
+                            }
 
-                          const credits = await checkCredits();
+                            // ignore if using input method engine
+                            if (event.nativeEvent.isComposing) {
+                              return;
+                            }
+
+                            const credits = await checkCredits();
 
                             if (credits <= 0) {
                               toast.error('No credits left');
                               return;
                             }
 
-
-                          handleSendMessage?.(event);
+                            handleSendMessage?.(event);
+                          } finally {
+                            // Re-enable after 1 second
+                            setTimeout(() => setIsButtonDisabled(false), 1000);
+                          }
                         }
                       }}
                       value={input}
@@ -540,29 +548,36 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                       <SendButton
                           show={input.length > 0 || isStreaming || uploadedFiles.length > 0}
                           isStreaming={isStreaming}
-                          disabled={!providerList || providerList.length === 0}
+                          disabled={!providerList || providerList.length === 0 || isButtonDisabled}
                           onClick={async (event) => {
+                            // Prevent multiple rapid clicks
+                            if (isButtonDisabled) return;
+                            setIsButtonDisabled(true);
+                            
+                            try {
+                              if(!session) {
+                                setShowLoginModal(true);
+                                return;
+                              }
 
-                            if(!session) {
-                              setShowLoginModal(true);
-                              return;
-                            }
+                              if (isStreaming) {
+                                handleStop?.();
+                                return;
+                              }
 
-                            if (isStreaming) {
-                              handleStop?.();
-                              return;
-                            }
+                              const credits = await checkCredits();
 
-                            const credits = await checkCredits();
+                              if (credits <= 0) {
+                                toast.error('No credits left');
+                                return;
+                              }
 
-                            if (credits <= 0) {
-                              toast.error('No credits left');
-                              return;
-                            }
-
-
-                            if (input.length > 0 || uploadedFiles.length > 0) {
-                              handleSendMessage?.(event);
+                              if (input.length > 0 || uploadedFiles.length > 0) {
+                                handleSendMessage?.(event);
+                              }
+                            } finally {
+                              // Re-enable the button after 1 second
+                              setTimeout(() => setIsButtonDisabled(false), 1000);
                             }
                           }}
                         />

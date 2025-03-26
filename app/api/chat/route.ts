@@ -48,7 +48,6 @@ export async function POST(request: Request) {
     contextOptimization: boolean;
   };
 
-  console.log('messages ************ 1');
 
   const session = await auth();
   const userId = session?.user?.id;
@@ -59,7 +58,6 @@ export async function POST(request: Request) {
     });
   }
 
-  console.log('messages ************ 2');
 
   const result = await withDb(db => db.update(credits)
     .set({
@@ -76,7 +74,6 @@ export async function POST(request: Request) {
     })
   );
 
-  console.log('messages ************ 3');
 
   if (!result.length) {
     return new Response(JSON.stringify({
@@ -87,7 +84,6 @@ export async function POST(request: Request) {
     });
   }
 
-  console.log('messages ************ 4');
 
   const cookieHeader = request.headers.get('Cookie');
   const apiKeys = JSON.parse(parseCookies(cookieHeader)?.apiKeys || '{}');
@@ -95,7 +91,6 @@ export async function POST(request: Request) {
     parseCookies(cookieHeader)?.providers || '{}'
   );
 
-  console.log('messages ************ 5');
 
   const stream = new SwitchableStream();
   const env = process.env as Record<string, string>; // Adjust based on your env setup
@@ -107,13 +102,10 @@ export async function POST(request: Request) {
   const encoder: TextEncoder = new TextEncoder();
   let progressCounter: number = 1;
 
-  console.log('messages ************ 6');
 
   try {
     const totalMessageContent = messages.reduce((acc, message) => acc + message.content, '');
     logger.debug(`Total message length: ${totalMessageContent.split(' ').length}, words`);
-
-    console.log('messages ************ 7');
 
     let lastChunk: string | undefined = undefined;
 
@@ -129,7 +121,6 @@ export async function POST(request: Request) {
         }
 
         if (filePaths.length > 0 && contextOptimization) {
-          console.log('messages ************ 8');
           logger.debug('Generating Chat Summary');
           dataStream.writeData({
             type: 'progress',
@@ -327,7 +318,7 @@ export async function POST(request: Request) {
         })();
         result.mergeIntoDataStream(dataStream);
       },
-      onError: (error: any) => `Custom error: ${error.message}`,
+      onError: (error: any) => `Custom error: ${error?.message}`,
     }).pipeThrough(
       new TransformStream({
         transform: (chunk, controller) => {
@@ -360,7 +351,6 @@ export async function POST(request: Request) {
         },
       })
     );
-    console.log('messages ************ 9');
 
     return new Response(dataStream, {
       status: 200,

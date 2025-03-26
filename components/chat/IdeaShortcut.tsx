@@ -46,14 +46,14 @@ export default function IdeaShortcut({ onSelect }: IdeaShortcutProps) {
   return (
     <div className="relative flex max-w-full gap-1 mx-2">
       <div className="w-full overflow-x-auto whitespace-nowrap scrollbar-hide">
-        <div className="flex gap-2.5 text-white dark:text-white">
+        <div className="flex gap-2.5 light:text-block dark:text-white">
           {ideas.map((idea, index) => (
             <button
               key={index}
               className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-zinc-800 px-3 py-1.5 transition-colors light:hover:bg-purple-600 dark:hover:border-purple-400"
               onClick={() => handleClick(idea.content)}
             >
-              <p className="text-xs text-zinc-50">{idea.label}</p>
+              <p className="text-xs">{idea.label}</p>
               <IoMdArrowUp className="shrink-0 h-4 w-4 text-muted-foreground" />
             </button>
           ))}
