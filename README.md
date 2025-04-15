@@ -1,11 +1,10 @@
 # genfly.dev
 
-
 [![genfly.dev: AI-Powered Full-Stack Web Development in the Browser](https://github.com/user-attachments/assets/563b1902-465f-4b84-b05c-69548f5872ec)](https://genfly.dev)
 
 Welcome to genfly.dev, an open-source AI-powered code generation tool that provides an isolated sandbox environment preview for each generated application
 
------
+---
 
 ## Video Demo
 
@@ -34,7 +33,6 @@ Here's a feature demonstration video of genfly.dev:
 - Isolated sandbox environment for running code.
 - Self-hosting support with Next.js
 
-
 ## Local Development
 
 1. **Install Package Manager (pnpm)**:
@@ -53,11 +51,27 @@ Here's a feature demonstration video of genfly.dev:
 
    ```bash
    pnpm run dev
-   ```   
-
+   ```
 
 ## Community & contact
+
 - [GitHub Issues](https://github.com/sparrow-js/an-codeAI/issues)：The bug must be mentioned in the issues.
 - Wechat：sparrow777-js，Open for collaboration and exchange.
 - email： genflyai@gmail.com
 
+# Docker image creation
+
+docker buildx build --platform linux/amd64 -t registry.fly.io/flow-gen-ai:latest --push .
+
+# Fly machine test
+
+fly machine run registry.fly.io/flow-gen-ai:latest \
+ --app test-ai-gen-12345 \
+ --region ord \
+ --vm-size shared-cpu-1x-1gb \
+ --port 80:8080 \
+ --port 443:8080 \
+ --env FLY_PROCESS_GROUP=app \
+ --env PRIMARY_REGION=ord \
+ --env APP_ENV=production \
+ --autostop
